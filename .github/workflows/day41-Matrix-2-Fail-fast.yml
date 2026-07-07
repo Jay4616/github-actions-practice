@@ -1,0 +1,42 @@
+name: Matrix strategy day-41
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-job:
+    strategy:
+      # If one combination crashes, keep running the rest!
+      fail-fast: false
+      
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.11", "3.12", "3.13"]
+        
+        # Exclude one specific combination from running
+        exclude:
+          - os: windows-latest
+            python-version: "3.11"
+    
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Let's intentionally trigger a failure on ONE combination to see fail-fast in action
+      - name: Run tests or simulate failure
+        run: |
+          if [ "${{ matrix.os }}" = "ubuntu-latest" ] && [ "${{ matrix.python-version }}" = "3.12" ]; then
+            echo "Simulating a critical failure on Ubuntu with Python 3.12..."
+            exit 1
+          else
+            echo "Running tests successfully on ${{ matrix.os }} with Python ${{ matrix.python-version }}"
+          fi
+        # Note: Windows uses a different shell, so if you run into syntax issues on the conditional, 
+        # a simple text echo step is perfectly fine for your submission!
