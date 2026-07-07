@@ -1,11 +1,11 @@
-name: Matrix startegy day-41
+name: Matrix strategy day-41
 
 on:
   workflow_dispatch:
 
 jobs:
   test-job:
-    startegy:
+    strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.11", "3.12", "3.13"]
@@ -13,11 +13,20 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      # Step 1: Always checkout your code first!
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      # Step 2: Dynamically setup the correct python version
       - name: Setup python
-        uses: actions/Setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
+      # Step 3: Run standard terminal commands to install and test
       - name: Run tests
-        uses: pytest
-        
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+          pytest --version
+          echo "Running tests successfully on ${{ matrix.os }} with Python ${{ matrix.python-version }}"
