@@ -1,0 +1,28 @@
+name: Day 43 - Env Vars and Contexts
+
+on: push
+
+env:
+  APP_NAME: myapp
+
+jobs:
+  debug-variables:
+    runs-on: ubuntu-latest
+
+    env:
+      ENVIRONMENT: staging
+
+    steps:
+      - name: Print All variables
+
+        env:
+          VERSION: 1.0.0
+        run: |
+          echo "Workflow Env: $APP_NAME"
+          echo "Job Env: $ENVIRONMENT"
+          echo "Step Env: $VERSION"
+
+      - name: Print Github Contexts
+        run: |
+          echo "Triggered by Actor ${{ github.actor }}"
+          echo "Commit SHA: ${{ github.sha }}"
