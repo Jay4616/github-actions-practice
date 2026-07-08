@@ -6,7 +6,6 @@ jobs:
   check-changes-job:
     runs-on: ubuntu-latest
     outputs:
-      # Change deploy-job to deploy so it matches the step script below!
       should_deploy: ${{ steps.decision-step.outputs.deploy }}
     steps:
       - id: decision-step
