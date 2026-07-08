@@ -1,0 +1,22 @@
+name: Day 43 - Job Outputs
+
+on: [push]
+
+jobs:
+  generate-date:
+    runs-on: ubuntu-latest
+    # Define what outputs this job makes available to the outside world
+    outputs:
+      current_date: ${{ steps.date-step.outputs.date }}
+    steps:
+      - id: date-step
+        # Writing data into the special $GITHUB_OUTPUT file makes it available to the job
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+  print-date:
+    runs-on: ubuntu-latest
+    needs: generate-date # Must wait for the data to be generated first!
+    steps:
+      - name: Consume Output
+        # Read the output using the needs context
+        run: echo "Today's date fetched from the previous job is ${{ needs.generate-date.outputs.current_date }}"
