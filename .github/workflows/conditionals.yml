@@ -1,0 +1,20 @@
+name: Day 43 -Conditionals Practice
+on: push
+
+jobs: 
+  conditional-steps-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Main branch only step
+        if: github.ref == 'refs/heads/main'
+        run: echo "This step executes because you pushed directly to the main branch"
+
+      - name: Intentionaly broken step
+        id: bad_step
+        run: this command does not exist
+
+      - name: Emergency rescue step
+        if: failure()
+        run: echo "I caught the error! The steps 'bad-step' failed, so I ran to help."
+
+
