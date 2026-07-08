@@ -1,0 +1,25 @@
+name: Day 43 - Multi-Job workflow
+
+on: push
+
+jobs:
+  build-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build Application
+        run: echo "Building the App"
+  
+  test-job:
+    runs-on: ubuntu-latest
+    needs: build-job
+    steps: 
+      - name: Run tests
+        run: echo "Running Tests"
+  
+  deploy-job:
+    runs-on: ubuntu-latest
+    needs: test-job
+    steps: 
+      - name: Deploy Application
+        run: echo "Deploying"
+        
