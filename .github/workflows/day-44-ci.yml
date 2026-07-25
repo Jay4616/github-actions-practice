@@ -40,14 +40,12 @@ jobs:
           name: test-execution-report
           path: output/test-report.txt
 
-      # Task 6: Caching
-      - name: Cache Pip Dependencies Example
+      # Task 6: Caching Example
+      - name: Cache Example File
         uses: actions/cache@v4
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          path: ~/.cache
+          key: ${{ runner.os }}-build-cache
 
   # Task 4: Download Artifact in Job 2
   consume-artifact:
