@@ -14,7 +14,7 @@ jobs:
 
       # Task 1 & 2: Verify Secrets
       - name: Verify Secret Presence
-        run: echo "The secret is set: ${{ secrets.MY_SECRET_MESSAGE != '' }}"
+        run: echo 'The secret is set: ${{ secrets.MY_SECRET_MESSAGE != '' }}'
 
       - name: Use Secret as Environment Variable
         env:
