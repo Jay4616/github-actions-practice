@@ -41,11 +41,16 @@ jobs:
           path: output/test-report.txt
 
       # Task 6: Caching Example
+      - name: Create Cache Folder
+        run: mkdir -p ~/.cache/my-cache
+
       - name: Cache Example File
         uses: actions/cache@v4
         with:
-          path: ~/.cache
-          key: ${{ runner.os }}-build-cache
+          path: ~/.cache/my-cache
+          key: ${{ runner.os }}-build-cache-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-build-cache-
 
   # Task 4: Download Artifact in Job 2
   consume-artifact:
