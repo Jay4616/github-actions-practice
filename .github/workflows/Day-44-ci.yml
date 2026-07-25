@@ -1,0 +1,70 @@
+name: Day 44 - Secrets, Artifacts & Real Tests
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  run-tests-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Task 1 & 2: Verify Secrets
+      - name: Verify Secret Presence
+        run: |
+          echo "Checking secret availability..."
+          echo "The secret is set: ${{ secrets.MY_SECRET_MESSAGE != '' }}"
+
+      - name: Use Secret as Environment Variable
+        env:
+          SECRET_MSG: ${{ secrets.MY_SECRET_MESSAGE }}
+        run: |
+          echo "Using secret securely through environment variable in shell..."
+
+      # Task 3 & 5: Run Tests and Generate Artifact
+      - name: Run Test Script & Generate Report
+        run: |
+          mkdir -p output
+          echo "==========================================" > output/test-report.txt
+          echo "      DAY 44 CI TEST EXECUTION REPORT     " >> output/test-report.txt
+          echo "==========================================" >> output/test-report.txt
+          echo "Status: PASSED" >> output/test-report.txt
+          echo "Execution Date: $(date)" >> output/test-report.txt
+          echo "Triggered by actor: ${{ github.actor }}" >> output/test-report.txt
+
+      # Task 3: Upload Artifact
+      - name: Upload Test Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-execution-report
+          path: output/test-report.txt
+
+      # Task 6: Caching Example
+      - name: Create Cache Folder
+        run: mkdir -p ~/.cache/my-cache
+
+      - name: Cache Example File
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/my-cache
+          key: ${{ runner.os }}-build-cache-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-build-cache-
+
+  # Task 4: Download Artifact in Job 2
+  consume-artifact:
+    needs: run-tests-and-upload
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifact from Job 1
+        uses: actions/download-artifact@v4
+        with:
+          name: test-execution-report
+
+      - name: Verify Artifact Content
+        run: |
+          echo "=== Content of Downloaded Artifact ==="
+          cat test-report.txt
